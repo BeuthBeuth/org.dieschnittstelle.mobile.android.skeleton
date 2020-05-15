@@ -1,3 +1,5 @@
 <resources>
-    <string name="app_name">MAD Demo S20</string>
+    <string name="app_name">Simple ToDo</string>
+    <string name="detailview_description_label">Beschreibung des ToDo</string>
+    <string name="detailview_main_label">Titel des Todo</string>
 </resources>
