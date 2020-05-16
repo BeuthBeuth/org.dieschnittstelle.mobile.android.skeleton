@@ -1,4 +1,4 @@
-package org.dieschnittstelle.mobile.android.skeleton;
+package skeleton;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -9,10 +9,11 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
 
-import org.dieschnittstelle.mobile.android.skeleton.databinding.ActivityDetailviewBinding;
+import skeleton.R;
+import skeleton.databinding.ActivityDetailviewBinding;
 
 import model.ToDo;
-
+import skeleton.R;
 
 
 public class DetailviewActivity extends AppCompatActivity {
@@ -25,7 +26,7 @@ public class DetailviewActivity extends AppCompatActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        binding = DataBindingUtil.setContentView(this,R.layout.activity_detailview);
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_detailview);
 
         this.item = (ToDo)getIntent().getSerializableExtra( ARG_ITEM );
         if (this.item == null) {

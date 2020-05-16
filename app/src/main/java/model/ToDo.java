@@ -1,12 +1,20 @@
 package model;
 
+import androidx.room.Entity;
+import androidx.room.PrimaryKey;
+
+import org.intellij.lang.annotations.Identifier;
+
 import java.io.Serializable;
 
+@Entity
 public class ToDo implements Serializable {
 
-    private static long idcount = 0;
 
-    private long id = ++idcount;
+//    private static long idcount = 0;
+
+    @PrimaryKey(autoGenerate = true)
+    private long id;// = ++idcount;
 
     private String name;
 

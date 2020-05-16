@@ -2,11 +2,11 @@ package model;
 
 import java.util.List;
 
-public interface IDataItemCRUDOperations {
+public interface IToDoCRUDOperations {
 
     public ToDo createToDo(ToDo item);
 
-    public List<ToDo> readAllDataItems();
+    public List<ToDo> readAllToDos();
 
     public ToDo readToDo();
 

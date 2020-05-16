@@ -4,17 +4,25 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class SimpleDataItemCRUDOperationsImpl implements IDataItemCRUDOperations{
+
+public class SimpleToDoCRUDOperationsImpl implements IToDoCRUDOperations {
 
     private static String[] ITEM_NAMES = new String[] {"lirem", "dopsum", "dolor", "sit", "consectetur", "elit", "direm", "lopsum"};
 
     @Override
     public ToDo createToDo(ToDo item) {
-        return null;
+        return item;
     }
 
     @Override
-    public List<ToDo> readAllDataItems() {
+    public List<ToDo> readAllToDos() {
+        try {
+            Thread.sleep(5000);
+        }
+        catch (Exception e) {
+
+        }
+
 //        return Arrays
 //                .stream(ITEM_NAMES)
 //                .map( name -> new DataItem (name) )

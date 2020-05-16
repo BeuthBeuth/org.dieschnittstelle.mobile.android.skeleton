@@ -1,4 +1,4 @@
-package org.dieschnittstelle.mobile.android.skeleton;
+package skeleton;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -13,34 +13,44 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
-import android.widget.TextView;
+import android.widget.ProgressBar;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 
-import org.dieschnittstelle.mobile.android.skeleton.databinding.ActivityMainListitemBinding;
+import skeleton.R;
 
+import skeleton.databinding.ActivityMainListitemBinding;
+
+import model.RoomToDoCRUDOperationsImpl;
 import model.ToDo;
-import model.IDataItemCRUDOperations;
-import model.SimpleDataItemCRUDOperationsImpl;
+import model.IToDoCRUDOperations;
+import tasks.CreateToDoTask;
+import tasks.ReadAllToDosTask;
+
+
+
+
 public class MainActivity extends AppCompatActivity {
 
     public static final int CALL_DETAILVIEW_FOR_NEW_ITEM = 0;
     private ViewGroup listView;
     private ArrayAdapter<ToDo> listViewAdapter;
     private FloatingActionButton fab;
+    private ProgressBar progressBar;
 
-    private IDataItemCRUDOperations crudOperations;
+    private IToDoCRUDOperations crudOperations;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate( savedInstanceState );
         setContentView( R.layout.activity_main );
 
-        this.crudOperations = new SimpleDataItemCRUDOperationsImpl();
+        this.crudOperations = new RoomToDoCRUDOperationsImpl(this); //SimpleDataItemCRUDOperationsImpl();
 
         this.listView = this.findViewById( R.id.listView );
         this.fab = this.findViewById( R.id.fab );
+        this.progressBar = findViewById(R.id.progressBar);
 
         this.listViewAdapter = new ArrayAdapter<ToDo>( this, R.layout.activity_main_listitem, R.id.itemName ) {
 
@@ -54,9 +64,8 @@ public class MainActivity extends AppCompatActivity {
 
                 return binding.getRoot() ;
             }
+
         };
-
-
 
         ((ListView)this.listView).setAdapter(this.listViewAdapter);
 
@@ -72,14 +81,17 @@ public class MainActivity extends AppCompatActivity {
             this.onAddNewListitem();
         } );
 
-        this.listViewAdapter.addAll( this.crudOperations.readAllDataItems() );
 
+        new ReadAllToDosTask(progressBar,
+                crudOperations,
+                items -> listViewAdapter.addAll(items)
+        ).execute();
 
     }
 
     private void onListitemSelected(ToDo item) {
 
-        Intent callDetailviewIntent = new Intent(this,DetailviewActivity.class);
+        Intent callDetailviewIntent = new Intent(this, DetailviewActivity.class);
         callDetailviewIntent.putExtra( DetailviewActivity.ARG_ITEM, item );
         startActivity( callDetailviewIntent );
 
@@ -92,18 +104,21 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    private void addNewItemToList(ToDo item) {this.listViewAdapter.add(item); }
-//        ViewGroup newsListitem = (ViewGroup)getLayoutInflater().inflate( R.layout.activity_main_listitem, null, false );
-//        TextView itemNameText = newsListitem.findViewById( R.id.itemName );
-//        itemNameText.setText(itemName);
-//        listView.addView(newsListitem);
+    private void createTodoAndAddToList(ToDo item) {
+        new CreateToDoTask(
+                progressBar,
+                crudOperations,
+                createdTodo -> this.listViewAdapter.add(createdTodo)
+        ).execute(item);
+    }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         if (requestCode == CALL_DETAILVIEW_FOR_NEW_ITEM) {
             if (resultCode == Activity.RESULT_OK) {
                 ToDo item = (ToDo)data.getSerializableExtra( DetailviewActivity.ARG_ITEM );
 //                showFeedbackMessage( "got new item: " + item);
-                addNewItemToList( item );
+                createTodoAndAddToList( item );
             }
             else if (resultCode == Activity.RESULT_CANCELED) {
                 showFeedbackMessage( "cancelled." );

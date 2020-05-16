@@ -4,7 +4,7 @@
     <data>
         <variable
             name="controller"
-            type="org.dieschnittstelle.mobile.android.skeleton.DetailviewActivity" />
+            type="skeleton.DetailviewActivity" />
     </data>
 <androidx.constraintlayout.widget.ConstraintLayout
     android:layout_width="match_parent"
